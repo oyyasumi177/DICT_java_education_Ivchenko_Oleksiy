@@ -26,6 +26,22 @@ public class ChatBot {
         for (int i = 0; i <= userinp; i++) {
             System.out.println(i + " !");
         }
-        
+        // Stage 5
+        System.out.println("Choose correct answer!");
+        System.out.println("What programming language are we learning?");
+        System.out.println("1. Python");
+        System.out.println("2. Java");
+        System.out.println("3. C#");
+        System.out.println("4. C++");
+        int stage5;
+        do  {
+            stage5 = input.nextInt();
+            if (stage5 != 2){
+                System.out.println("Wrong");
+            } else {
+                System.out.println("Correct");
+            }
+        }  while (stage5 != 2);
+        System.out.println("Goodbye, have a nice day!");
     }
 }

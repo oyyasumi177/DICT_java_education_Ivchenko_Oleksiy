@@ -25,14 +25,18 @@ public class hangman {
             System.out.print("Input your a letter: ");
             String stage3 = input.nextLine();
             if (stage3.length() != 1) {
-                System.out.println("Please, a single letter.");
+                System.out.println("You should input a single letter.");
                 continue;
             }
 
             char stage5 = stage3.charAt(0);
+
+            if (stage5 < 'a' || stage5 > 'z') {
+                System.out.println("Please enter a lowercase English letter");
+                continue;
+            }
             if (stage6.indexOf(stage5) != -1) {
-                System.out.println("No improvements");
-                attempts--;
+                System.out.println("You've already guessed this letter");
                 continue;
             }
             stage6 += stage5;

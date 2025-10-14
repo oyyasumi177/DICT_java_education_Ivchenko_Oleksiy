@@ -6,9 +6,8 @@ public class hangman {
         Scanner input = new Scanner(System.in);
         Random rand = new Random();
 
-        // Stage 5
+        // Stage 6
         System.out.println("HANGMAN");
-
         String[] w = {"python", "java", "javascript", "kotlin"};
         int index = rand.nextInt(w.length);
         String secret2 = w[index];
@@ -19,18 +18,24 @@ public class hangman {
         }
 
         int attempts = 8;
+        String stage6 = "";
 
         while (attempts > 0) {
             System.out.println(new String(stage4));
             System.out.print("Input your a letter: ");
             String stage3 = input.nextLine();
-
             if (stage3.length() != 1) {
                 System.out.println("Please, a single letter.");
                 continue;
             }
 
             char stage5 = stage3.charAt(0);
+            if (stage6.indexOf(stage5) != -1) {
+                System.out.println("No improvements");
+                attempts--;
+                continue;
+            }
+            stage6 += stage5;
             boolean found = false;
 
             for (int i = 0; i < secret2.length(); i++) {
@@ -42,12 +47,16 @@ public class hangman {
 
             if (!found) {
                 System.out.println("That letter doesn't appear in the word.");
+                attempts--;
+            } else if (new String(stage4).equals(secret2)) {
+                System.out.println(secret2);
+                System.out.println("You guessed the word!");
+                System.out.println("You survived!");
+                return;
             }
-
-            attempts--;
         }
 
-        System.out.println("Thanks for playing!");
-        System.out.println("We'll see how well you did in the next stage");
+        System.out.println("You lost!");
+
     }
 }

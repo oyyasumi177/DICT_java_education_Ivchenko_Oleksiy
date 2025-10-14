@@ -6,8 +6,16 @@ public class hangman {
         Scanner input = new Scanner(System.in);
         Random rand = new Random();
 
-        // Stage 6
+        // Stage 8
         System.out.println("HANGMAN");
+        System.out.print("Type \"play\" to play the game, \"exit\" to quit: ");
+        String stage8 = input.nextLine();
+        if (stage8.equals("play")) {
+            System.out.println("HANGMAN");
+        } else if  (stage8.equals("exit")) {
+            return;
+        }
+
         String[] w = {"python", "java", "javascript", "kotlin"};
         int index = rand.nextInt(w.length);
         String secret2 = w[index];

@@ -23,7 +23,7 @@ class CoffeeMachine {
     private int beans;
     private int cups;
     private int money;
-    private String state; // current state: "action", "buy", "fillWater", "fillMilk", etc.
+    private String state;
 
     public CoffeeMachine() {
         this.water = 400;
@@ -72,7 +72,6 @@ class CoffeeMachine {
                         makeCoffee(Cup.cappuccinowater, Cup.cappuccinomilk, Cup.cappuccinobeans, Cup.cappuccinocost);
                         break;
                     case "back":
-                        // просто вертаємось до вибору дії
                         break;
                     default:
                         System.out.println("Unknown coffee choice!");

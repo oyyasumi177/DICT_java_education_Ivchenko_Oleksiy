@@ -11,6 +11,7 @@ public class MatrixProcessing {
             System.out.println("3. Multiply matrices");
             System.out.println("4. Transpose matrix");
             System.out.println("5. Calculate a determinant");
+            System.out.println("6. Inverse matrix");
             System.out.println("0. Exit");
             System.out.print("Your choice: > ");
 
@@ -123,6 +124,30 @@ public class MatrixProcessing {
                     break;
                 default:
                     System.out.println("Invalid choice!");
+                case 6: // Зворотна матриця
+                    System.out.print("Enter matrix size: > ");
+                    int invN = sc.nextInt();
+                    int invM = sc.nextInt();
+
+                    if (invN != invM) {
+                        System.out.println("The operation cannot be performed.");
+                        break;
+                    }
+
+                    Matrix Ainv = new Matrix(invN, invM);
+                    System.out.println("Enter matrix:");
+                    Ainv.read(sc);
+
+                    double detA = Ainv.determinant();
+                    if (detA == 0) {
+                        System.out.println("This matrix doesn't have an inverse.");
+                        break;
+                    }
+
+                    Matrix inverseMatrix = Ainv.inverse();
+                    System.out.println("The result is:");
+                    inverseMatrix.print();
+                    break;
             }
         }
         sc.close();
@@ -238,5 +263,33 @@ class Matrix {
             det += mat[0][j] * Math.pow(-1, j) * determinant(subMatrix);
         }
         return det;
+    }
+    public Matrix inverse() {
+        double det = this.determinant();
+        if (det == 0) throw new IllegalStateException("Matrix is not invertible");
+
+        int n = this.rows;
+        Matrix cofactors = new Matrix(n, n);
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                double[][] subMatrix = new double[n-1][n-1];
+                int subRow = 0;
+                for (int r = 0; r < n; r++) {
+                    if (r == i) continue;
+                    int subCol = 0;
+                    for (int c = 0; c < n; c++) {
+                        if (c == j) continue;
+                        subMatrix[subRow][subCol++] = this.data[r][c];
+                    }
+                    subRow++;
+                }
+                double minor = determinant(subMatrix);
+                cofactors.data[i][j] = Math.pow(-1, i + j) * minor;
+            }
+        }
+
+        Matrix adjugate = cofactors.transposeMainDiagonal();
+        return adjugate.multiplyByConstant(1.0 / det);
     }
 }

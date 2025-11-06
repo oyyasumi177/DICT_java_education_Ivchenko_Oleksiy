@@ -9,6 +9,7 @@ public class MatrixProcessing {
             System.out.println("1. Add matrices");
             System.out.println("2. Multiply matrix by a constant");
             System.out.println("3. Multiply matrices");
+            System.out.println("4. Transpose matrix");
             System.out.println("0. Exit");
             System.out.print("Your choice: > ");
 
@@ -78,7 +79,32 @@ public class MatrixProcessing {
                         product.print();
                     }
                     break;
+                case 4:
+                    System.out.println("1. Main diagonal");
+                    System.out.println("2. Side diagonal");
+                    System.out.println("3. Vertical line");
+                    System.out.println("4. Horizontal line");
+                    System.out.print("Your choice: > ");
+                    int transposeChoice = sc.nextInt();
+                    System.out.print("Enter size of matrix: > ");
+                    int q = sc.nextInt();
+                    int w = sc.nextInt();
+                    Matrix P = new Matrix(q, w);
+                    System.out.println("Enter matrix:");
+                    P.read(sc);
 
+                    Matrix result = null;
+                    switch (transposeChoice) {
+                        case 1: result = P.transposeMainDiagonal(); break;
+                        case 2: result = P.transposeSideDiagonal(); break;
+                        case 3: result = P.transposeVertical(); break;
+                        case 4: result = P.transposeHorizontal(); break;
+                        default: System.out.println("Invalid choice!"); continue;
+                    }
+
+                    System.out.println("The result is:");
+                    result.print();
+                    break;
                 default:
                     System.out.println("Invalid choice!");
             }
@@ -140,6 +166,37 @@ class Matrix {
                     sum += a.data[i][k] * b.data[k][j];
                 result.data[i][j] = sum;
             }
+        return result;
+    }
+    public Matrix transposeMainDiagonal() {
+        Matrix result = new Matrix(cols, rows);
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                result.data[j][i] = data[i][j];
+        return result;
+    }
+
+    public Matrix transposeSideDiagonal() {
+        Matrix result = new Matrix(cols, rows);
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                result.data[cols-1-j][rows-1-i] = data[i][j];
+        return result;
+    }
+
+    public Matrix transposeVertical() {
+        Matrix result = new Matrix(rows, cols);
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                result.data[i][cols-1-j] = data[i][j];
+        return result;
+    }
+
+    public Matrix transposeHorizontal() {
+        Matrix result = new Matrix(rows, cols);
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                result.data[rows-1-i][j] = data[i][j];
         return result;
     }
 }

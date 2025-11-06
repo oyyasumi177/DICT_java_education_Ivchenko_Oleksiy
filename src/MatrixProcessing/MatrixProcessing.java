@@ -10,6 +10,7 @@ public class MatrixProcessing {
             System.out.println("2. Multiply matrix by a constant");
             System.out.println("3. Multiply matrices");
             System.out.println("4. Transpose matrix");
+            System.out.println("5. Calculate a determinant");
             System.out.println("0. Exit");
             System.out.print("Your choice: > ");
 
@@ -105,6 +106,21 @@ public class MatrixProcessing {
                     System.out.println("The result is:");
                     result.print();
                     break;
+                case 5:
+                    System.out.print("Enter matrix size: > ");
+                    int sizeN = sc.nextInt();
+                    int sizeM = sc.nextInt();
+                    if (sizeN != sizeM) {
+                        System.out.println("The operation cannot be performed.");
+                        break;
+                    }
+                    Matrix D = new Matrix(sizeN, sizeM);
+                    System.out.println("Enter matrix:");
+                    D.read(sc);
+                    double det = D.determinant();
+                    System.out.println("The result is:");
+                    System.out.println((int)det); // якщо хочеш ціле число
+                    break;
                 default:
                     System.out.println("Invalid choice!");
             }
@@ -198,5 +214,29 @@ class Matrix {
             for (int j = 0; j < cols; j++)
                 result.data[rows-1-i][j] = data[i][j];
         return result;
+    }
+    public double determinant() {
+        if (rows != cols) throw new IllegalStateException("Matrix must be square");
+        return determinant(this.data);
+    }
+
+    private double determinant(double[][] mat) {
+        int n = mat.length;
+        if (n == 1) return mat[0][0];
+        if (n == 2) return mat[0][0]*mat[1][1] - mat[0][1]*mat[1][0];
+
+        double det = 0;
+        for (int j = 0; j < n; j++) {
+            double[][] subMatrix = new double[n-1][n-1];
+            for (int i = 1; i < n; i++) {
+                int subCol = 0;
+                for (int k = 0; k < n; k++) {
+                    if (k == j) continue;
+                    subMatrix[i-1][subCol++] = mat[i][k];
+                }
+            }
+            det += mat[0][j] * Math.pow(-1, j) * determinant(subMatrix);
+        }
+        return det;
     }
 }

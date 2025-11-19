@@ -18,7 +18,7 @@ public class MatrixProcessing {
             int choice = sc.nextInt();
             if (choice == 0) break;
             switch (choice) {
-                case 1: // Додавання
+                case 1:
                     System.out.print("Enter size of first matrix: > ");
                     int n1 = sc.nextInt();
                     int m1 = sc.nextInt();
@@ -42,7 +42,7 @@ public class MatrixProcessing {
                     }
                     break;
 
-                case 2: // Множення на константу
+                case 2:
                     System.out.print("Enter size of matrix: > ");
                     int n = sc.nextInt();
                     int m = sc.nextInt();
@@ -58,7 +58,7 @@ public class MatrixProcessing {
                     resultConst.print();
                     break;
 
-                case 3: // Множення матриць
+                case 3:
                     System.out.print("Enter size of first matrix: > ");
                     int r1 = sc.nextInt();
                     int c1 = sc.nextInt();
@@ -120,11 +120,11 @@ public class MatrixProcessing {
                     D.read(sc);
                     double det = D.determinant();
                     System.out.println("The result is:");
-                    System.out.println((int)det); // якщо хочеш ціле число
+                    System.out.println((int)det);
                     break;
                 default:
                     System.out.println("Invalid choice!");
-                case 6: // Зворотна матриця
+                case 6: 
                     System.out.print("Enter matrix size: > ");
                     int invN = sc.nextInt();
                     int invM = sc.nextInt();

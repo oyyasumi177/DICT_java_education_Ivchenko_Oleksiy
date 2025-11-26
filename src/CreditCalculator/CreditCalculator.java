@@ -1,7 +1,5 @@
 package CreditCalculator;
 
-import java.lang.Math;
-
 public class CreditCalculator {
     public static void main(String[] args) {
 
@@ -10,8 +8,6 @@ public class CreditCalculator {
         String paymentStr = System.getProperty("payment");
         String periodsStr = System.getProperty("periods");
         String interestStr = System.getProperty("interest");
-
-        CalculatorLogic logic = new CalculatorLogic();
 
         if (type == null || interestStr == null) {
             System.out.println("Incorrect parameters");
@@ -28,90 +24,106 @@ public class CreditCalculator {
             return;
         }
 
-        switch (type) {
-            case "diff":
-                if (paymentStr != null) {
-                    System.out.println("Incorrect parameters");
-                    return;
-                }
-                logic.calculateDifferentiated(principal, periods, interest);
-                break;
+        CalculatorLogic logic = new CalculatorLogic();
 
-            case "annuity":
-                int known = 0;
-                if (principalStr != null) known++;
-                if (paymentStr != null) known++;
-                if (periodsStr != null) known++;
-                if (known < 2) {
-                    System.out.println("Incorrect parameters");
-                    return;
-                }
+        if (type.equals("diff")) {
 
-                if (principalStr == null) {
-                    logic.calculatePrincipal(payment, periods, interest);
-                } else if (paymentStr == null) {
-                    logic.calculateAnnuity(principal, periods, interest);
-                } else if (periodsStr == null) {
-                    logic.calculatePeriods(principal, payment, interest);
-                } else {
-                    System.out.println("Incorrect parameters");
-                }
-                break;
-
-            default:
+            if (paymentStr != null || principalStr == null || periodsStr == null) {
                 System.out.println("Incorrect parameters");
+                return;
+            }
+
+            logic.calculateDifferentiated(principal, periods, interest);
+            return;
         }
+
+        if (type.equals("annuity")) {
+
+            int params = 0;
+            if (principalStr != null) params++;
+            if (paymentStr != null) params++;
+            if (periodsStr != null) params++;
+
+            if (params < 2) {
+                System.out.println("Incorrect parameters");
+                return;
+            }
+
+            if (principalStr == null) {
+                logic.calculatePrincipal(payment, periods, interest);
+                return;
+            }
+            if (paymentStr == null) {
+                logic.calculateAnnuity(principal, periods, interest);
+                return;
+            }
+            if (periodsStr == null) {
+                logic.calculatePeriods(principal, payment, interest);
+                return;
+            }
+
+            System.out.println("Incorrect parameters");
+            return;
+        }
+
+        System.out.println("Incorrect parameters");
     }
 }
 
 class CalculatorLogic {
 
+    private double monthlyRate(double interest) {
+        return interest / (12 * 100.0);
+    }
+
     public void calculateAnnuity(double principal, int periods, double interest) {
-        double i = interest / (12 * 100);
+        double i = monthlyRate(interest);
         double payment = principal * (i * Math.pow(1 + i, periods)) / (Math.pow(1 + i, periods) - 1);
-        System.out.println("Your annuity payment = " + Math.round(payment) + "!");
-        int overpayment = (int) Math.round(payment * periods - principal);
-        System.out.println("Overpayment = " + overpayment);
+
+        long p = Math.round(payment);
+        System.out.println("Your annuity payment = " + p + "!");
+        System.out.println("Overpayment = " + (p * periods - (long) principal));
     }
 
     public void calculatePrincipal(double payment, int periods, double interest) {
-        double i = interest / (12 * 100);
+        double i = monthlyRate(interest);
         double principal = payment / ((i * Math.pow(1 + i, periods)) / (Math.pow(1 + i, periods) - 1));
-        System.out.println("Your loan principal = " + Math.round(principal) + "!");
-        int overpayment = (int) Math.round(payment * periods - principal);
-        System.out.println("Overpayment = " + overpayment);
+
+        long pr = Math.round(principal);
+        System.out.println("Your loan principal = " + pr + "!");
+        System.out.println("Overpayment = " + ((long)(payment * periods) - pr));
     }
 
     public void calculatePeriods(double principal, double payment, double interest) {
-        double i = interest / (12 * 100);
+        double i = monthlyRate(interest);
         double n = Math.log(payment / (payment - i * principal)) / Math.log(1 + i);
-        int months = (int) Math.ceil(n);
-        int years = months / 12;
-        int m = months % 12;
 
-        if (years > 0 && m > 0)
-            System.out.println("It will take " + years + " years and " + m + " months to repay this loan!");
+        int months = (int)Math.ceil(n);
+        int years = months / 12;
+        int rem = months % 12;
+
+        if (years > 0 && rem > 0)
+            System.out.println("It will take " + years + " years and " + rem + " months to repay this loan!");
         else if (years > 0)
             System.out.println("It will take " + years + " years to repay this loan!");
         else
             System.out.println("It will take " + months + " months to repay this loan!");
 
-        int overpayment = (int) Math.round(payment * months - principal);
-        System.out.println("Overpayment = " + overpayment);
+        System.out.println("Overpayment = " + ((long)(payment * months - principal)));
     }
 
     public void calculateDifferentiated(double principal, int periods, double interest) {
-        double i = interest / (12 * 100);
-        int total = 0;
+        double i = monthlyRate(interest);
+        long total = 0;
 
         for (int m = 1; m <= periods; m++) {
-            double payment = (principal / periods) + i * (principal - (principal * (m - 1) / periods));
-            int rounded = (int) Math.ceil(payment);
-            total += rounded;
+            double diff = principal / periods + i * (principal - (principal * (m - 1) / periods));
+            long rounded = (long)Math.ceil(diff);
+
             System.out.println("Month " + m + ": payment is " + rounded);
+            total += rounded;
         }
 
-        int overpayment = (int) Math.round(total - principal);
-        System.out.println("Overpayment = " + overpayment);
+        System.out.println("Overpayment = " + (total - (long)principal));
     }
 }
